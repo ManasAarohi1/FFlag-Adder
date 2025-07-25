@@ -5,7 +5,6 @@
   "FFlagHandleAltEnterFullscreenManually": "False",
   "FFlagHighlightOutlinesOnMobile": "True",
   "FFlagDebugGraphicsPreferD3D11": "True",
-  "FStringDebugGraphicsPreferredGPUName": "NVIDIA GeForce RTX 5070 Ti",
   "DFFlagTextureQualityOverrideEnabled": "True",
   "DFIntTextureQualityOverride": "0",
   "DFIntTaskSchedulerTargetFps": "1",
