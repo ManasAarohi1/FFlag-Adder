@@ -101,5 +101,9 @@
   "DFFlagRemoveTelemetryFlushOnJobClose": "False",
   "DFFlagDSTelemetryV2ReplaceSeparator": "False",
   "DFFlagGraphicsQualityUsageTelemetry": "False",
-  "DFFlagSimSolverSendPerfTelemetryToElasticSearch2": "False"
+  "DFFlagSimSolverSendPerfTelemetryToElasticSearch2": "False",
+  "FFlagDebugRomarkMockingAudioDevices": "True",
+  "FFlagDisableAudio": "True",
+  "FFlagDisableSoundEffects": "True",
+  "DFIntMaxLoadableAudioChannelCount": "0"
 }
