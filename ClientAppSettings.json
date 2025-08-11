@@ -105,5 +105,18 @@
   "FFlagDebugRomarkMockingAudioDevices": "True",
   "FFlagDisableAudio": "True",
   "FFlagDisableSoundEffects": "True",
-  "DFIntMaxLoadableAudioChannelCount": "0"
+  "DFIntMaxLoadableAudioChannelCount": "0",
+  "DFIntSoundManagerMaxCachedSounds": "0",
+  "DFIntSoundManagerMaxPreloadedSounds": "0",
+  "DFIntSoundManagerMaxStreamingSounds": "0",
+  "DFFlagSoundManagerDisableCaching": "True",
+  "FFlagSoundManagerEnableStreaming": "False",
+  "FFlagSoundManagerPreloadEnabled": "False",
+  "DFFlagDebugDisableAudioSystem": "True",
+  "DFFlagSoundManagerUseDummyOutput": "True",
+  "DFFlagDisableAudioEmitters": "True",
+  "DFIntMaxActiveEmitters": "0",
+  "DFFlagDisableSpatialAudio": "True",
+  "DFIntAudioSampleRateHz": "0",
+  "FFlagForceDisableAudioEngine": "True"
 }
