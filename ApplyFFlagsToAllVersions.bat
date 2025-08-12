@@ -1,62 +1,67 @@
 @echo off
-:: Location of your custom ClientAppSettings.json
-set "SOURCE_JSON=ClientAppSettings.json"
+title FFlag Applier
+setlocal enabledelayedexpansion
 
-:: Common base directories to scan for bootstrappers
-set "SEARCH_DIRS=%localappdata%\Roblox"
-set "SEARCH_DIRS=!SEARCH_DIRS!;%localappdata%\Bloxstrap"
-set "SEARCH_DIRS=!SEARCH_DIRS!;%localappdata%\Fishstrap"
-set "SEARCH_DIRS=!SEARCH_DIRS!;%localappdata%\Voidstrap"
-set "SEARCH_DIRS=!SEARCH_DIRS!;%programfiles%\Roblox"
-set "SEARCH_DIRS=!SEARCH_DIRS!;%programfiles(x86)%\Roblox"
-set "SEARCH_DIRS=!SEARCH_DIRS!;%userprofile%\AppData\Roaming"
+:: Path to your JSON file
+set "SOURCE_JSON=%~dp0ClientAppSettings.json"
 
-:MENU
-cls
-echo ==============================
-echo   Roblox FFlag Manager
-echo ==============================
-echo 1. Apply FFlags from %SOURCE_JSON%
-echo 2. Remove all FFlags
-echo 3. Exit
-echo ==============================
-set /p choice="Choose an option (1-3): "
+:: List of known bootstrapper version paths
+set "BOOTSTRAP_PATHS=%localappdata%\Roblox\Versions"
+set "BOOTSTRAP_PATHS=!BOOTSTRAP_PATHS!;%localappdata%\Bloxstrap\Versions"
+set "BOOTSTRAP_PATHS=!BOOTSTRAP_PATHS!;%localappdata%\Fishstrap\Versions"
+set "BOOTSTRAP_PATHS=!BOOTSTRAP_PATHS!;%localappdata%\Voidstrap\Versions"
 
-if "%choice%"=="1" goto APPLY
-if "%choice%"=="2" goto REMOVE
-if "%choice%"=="3" exit
-goto MENU
+:: Also search %localappdata% and %appdata% for any "version-*" folders
+for /d %%D in ("%localappdata%\*") do (
+    if exist "%%D\version-*" (
+        set "BOOTSTRAP_PATHS=!BOOTSTRAP_PATHS!;%%D"
+    )
+)
+for /d %%D in ("%appdata%\*") do (
+    if exist "%%D\version-*" (
+        set "BOOTSTRAP_PATHS=!BOOTSTRAP_PATHS!;%%D"
+    )
+)
 
-:APPLY
-cls
-echo Scanning for Roblox bootstrapper Versions folders...
-for %%D in (%SEARCH_DIRS%) do (
-    if exist "%%~D\Versions" (
-        for /d %%V in ("%%~D\Versions\version-*") do (
+echo =================================================
+echo             FFlag Applier - All Bootstrappers
+echo =================================================
+echo Press 1 to APPLY FFlags
+echo Press 2 to REMOVE all FFlags
+echo =================================================
+
+choice /C 12 /N /M "Choose: "
+
+if errorlevel 2 goto remove_fflags
+if errorlevel 1 goto apply_fflags
+
+:apply_fflags
+echo Applying ClientAppSettings.json to all detected Roblox versions...
+for %%P in (%BOOTSTRAP_PATHS%) do (
+    if exist "%%P" (
+        for /d %%V in ("%%P\version-*") do (
             echo Patching %%V ...
             mkdir "%%V\ClientSettings" >nul 2>&1
             copy /Y "%SOURCE_JSON%" "%%V\ClientSettings\ClientAppSettings.json" >nul
         )
     )
 )
-echo.
-echo Done! All detected Roblox installations have been updated with your FFlags.
+echo Done applying FFlags!
 pause
-goto MENU
+goto :eof
 
-:REMOVE
-cls
-echo Scanning for Roblox bootstrapper Versions folders...
-for %%D in (%SEARCH_DIRS%) do (
-    if exist "%%~D\Versions" (
-        for /d %%V in ("%%~D\Versions\version-*") do (
+:remove_fflags
+echo Removing ClientAppSettings.json from all detected Roblox versions...
+for %%P in (%BOOTSTRAP_PATHS%) do (
+    if exist "%%P" (
+        for /d %%V in ("%%P\version-*") do (
             if exist "%%V\ClientSettings\ClientAppSettings.json" (
-                del /f /q "%%V\ClientSettings\ClientAppSettings.json" >nul
+                del /f /q "%%V\ClientSettings\ClientAppSettings.json"
                 echo Removed from %%V
             )
         )
     )
 )
-echo.
-echo Done! All FFlags have been removed from detected installations.
+echo Done removing FFlags!
 pause
+goto :eof
