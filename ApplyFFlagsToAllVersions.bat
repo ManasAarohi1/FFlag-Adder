@@ -24,7 +24,7 @@ for /d %%D in ("%appdata%\*") do (
 )
 
 echo =================================================
-echo             FFlag Applier - All Bootstrappers
+echo             FFlag Applier
 echo =================================================
 echo Press 1 to APPLY FFlags
 echo Press 2 to REMOVE all FFlags
