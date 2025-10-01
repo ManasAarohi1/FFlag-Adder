@@ -3,7 +3,7 @@ title FFlag Applier
 setlocal enabledelayedexpansion
 
 :: Path to your JSON file
-set "SOURCE_JSON=%~dp0ClientAppSettings.json"
+set "SOURCE_JSON=%~dp0IxpSettings.json"
 
 :: List of known bootstrapper version paths
 set "BOOTSTRAP_PATHS=%localappdata%\Roblox\Versions"
@@ -24,44 +24,44 @@ for /d %%D in ("%appdata%\*") do (
 )
 
 echo =================================================
-echo             FFlag Applier
+echo             FFlag Applier 
 echo =================================================
-echo Press 1 to APPLY FFlags
-echo Press 2 to REMOVE all FFlags
+echo Press 1 to APPLY IxpSettings.json
+echo Press 2 to REMOVE all IxpSettings.json
 echo =================================================
 
 choice /C 12 /N /M "Choose: "
 
-if errorlevel 2 goto remove_fflags
-if errorlevel 1 goto apply_fflags
+if errorlevel 2 goto remove_ixp
+if errorlevel 1 goto apply_ixp
 
-:apply_fflags
-echo Applying ClientAppSettings.json to all detected Roblox versions...
+:apply_ixp
+echo Applying IxpSettings.json to all detected Roblox versions...
 for %%P in (%BOOTSTRAP_PATHS%) do (
     if exist "%%P" (
         for /d %%V in ("%%P\version-*") do (
             echo Patching %%V ...
             mkdir "%%V\ClientSettings" >nul 2>&1
-            copy /Y "%SOURCE_JSON%" "%%V\ClientSettings\ClientAppSettings.json" >nul
+            copy /Y "%SOURCE_JSON%" "%%V\ClientSettings\IxpSettings.json" >nul
         )
     )
 )
-echo Done applying FFlags!
+echo Done applying IxpSettings.json!
 pause
 goto :eof
 
-:remove_fflags
-echo Removing ClientAppSettings.json from all detected Roblox versions...
+:remove_ixp
+echo Removing IxpSettings.json from all detected Roblox versions...
 for %%P in (%BOOTSTRAP_PATHS%) do (
     if exist "%%P" (
         for /d %%V in ("%%P\version-*") do (
-            if exist "%%V\ClientSettings\ClientAppSettings.json" (
-                del /f /q "%%V\ClientSettings\ClientAppSettings.json"
+            if exist "%%V\ClientSettings\IxpSettings.json" (
+                del /f /q "%%V\ClientSettings\IxpSettings.json"
                 echo Removed from %%V
             )
         )
     )
 )
-echo Done removing FFlags!
+echo Done removing IxpSettings.json!
 pause
 goto :eof
