@@ -2,7 +2,7 @@ This will automatically apply the fflags in "ClientAppSettings.json" to all robl
 
 The fflag list there previously is a premade list made to optimize roblox to its fullest to decrease CPU and RAM utilization
 
-To apply custom fflags, Edit the "ClientAppSettings.json" with the fflags you desire.
+To apply custom fflags, Edit the "IxpSettings.json" with the fflags you desire.
 
 You will have to rerun the script every time roblox updates as roblox will reset these fflags each time.
 
