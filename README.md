@@ -8,8 +8,6 @@ You will have to rerun the script every time roblox updates as roblox will reset
 
 TUTORIAL 
 
-Make sure you uninstall all bootstrappers and install the vanilla roblox client.
-
 Run the bat file, If you would like to have a new set of fflags edit the .json file and paste your list.
 
 Done!
