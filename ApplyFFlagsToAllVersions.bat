@@ -1,88 +1,44 @@
 @echo off
-title FFlag Applier (Universal)
-setlocal enabledelayedexpansion
+title FFlag Applier
+setlocal
 
-:: === Path to the source JSON file ===
+:: Path to your JSON file
 set "SOURCE_JSON=%~dp0IxpSettings.json"
 
-if not exist "%SOURCE_JSON%" (
-    echo [ERROR] IxpSettings.json not found in script directory.
-    pause
-    exit /b
-)
+:: Target folder
+set "TARGET_FOLDER=%LOCALAPPDATA%\Roblox\ClientSettings"
 
-:: === Build search paths ===
-set "BOOTSTRAP_PATHS="
-set "COMMON_DIRS=%localappdata%\Roblox\Versions;%localappdata%\Bloxstrap\Versions;%localappdata%\Fishstrap\Versions;%localappdata%\Voidstrap\Versions"
-
-:: Add the common bootstrapper locations
-for %%D in (%COMMON_DIRS%) do (
-    if exist "%%~D" (
-        set "BOOTSTRAP_PATHS=!BOOTSTRAP_PATHS!;%%~D"
-    )
-)
-
-:: Also search %localappdata% and %appdata% for any folders containing version-* subfolders
-for /d %%D in ("%localappdata%\*") do (
-    for /d %%V in ("%%D\version-*") do (
-        if exist "%%V" (
-            set "BOOTSTRAP_PATHS=!BOOTSTRAP_PATHS!;%%D"
-            goto :next_local
-        )
-    )
-    :next_local
-)
-for /d %%D in ("%appdata%\*") do (
-    for /d %%V in ("%%D\version-*") do (
-        if exist "%%V" (
-            set "BOOTSTRAP_PATHS=!BOOTSTRAP_PATHS!;%%D"
-            goto :next_app
-        )
-    )
-    :next_app
-)
-
-:: === Menu ===
 echo =================================================
-echo                FFlag Applier (Universal)
+echo             FFlag Applier
 echo =================================================
-echo   Press 1 to APPLY IxpSettings.json
-echo   Press 2 to REMOVE all IxpSettings.json
+echo Press 1 to APPLY FFlags
+echo Press 2 to REMOVE all FFlags
 echo =================================================
+
 choice /C 12 /N /M "Choose: "
 
-if errorlevel 2 goto remove_ixp
-if errorlevel 1 goto apply_ixp
+if errorlevel 2 goto remove_fflags
+if errorlevel 1 goto apply_fflags
 
-:apply_ixp
-echo Applying IxpSettings.json to all detected Roblox versions...
-for %%P in (%BOOTSTRAP_PATHS%) do (
-    if exist "%%P" (
-        for /d %%V in ("%%P\version-*") do (
-            if exist "%%V" (
-                echo Patching %%V ...
-                mkdir "%%V\ClientSettings" >nul 2>&1
-                copy /Y "%SOURCE_JSON%" "%%V\ClientSettings\IxpSettings.json" >nul
-            )
-        )
-    )
+
+:apply_fflags
+echo Applying IxpSettings.json to %TARGET_FOLDER% ...
+if not exist "%TARGET_FOLDER%" (
+    mkdir "%TARGET_FOLDER%" >nul 2>&1
 )
-echo Done applying IxpSettings.json!
+copy /Y "%SOURCE_JSON%" "%TARGET_FOLDER%\IxpSettings.json" >nul
+echo Done applying FFlags!
 pause
 goto :eof
 
-:remove_ixp
-echo Removing IxpSettings.json from all detected Roblox versions...
-for %%P in (%BOOTSTRAP_PATHS%) do (
-    if exist "%%P" (
-        for /d %%V in ("%%P\version-*") do (
-            if exist "%%V\ClientSettings\IxpSettings.json" (
-                del /f /q "%%V\ClientSettings\IxpSettings.json"
-                echo Removed from %%V
-            )
-        )
-    )
+
+:remove_fflags
+echo Removing IxpSettings.json from %TARGET_FOLDER% ...
+if exist "%TARGET_FOLDER%\IxpSettings.json" (
+    del /f /q "%TARGET_FOLDER%\IxpSettings.json"
+    echo Removed IxpSettings.json
+) else (
+    echo No IxpSettings.json found to remove.
 )
-echo Done removing IxpSettings.json!
 pause
 goto :eof
