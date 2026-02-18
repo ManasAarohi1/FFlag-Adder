@@ -3,7 +3,7 @@ title FFlag Applier
 setlocal
 
 :: Path to your JSON file
-set "SOURCE_JSON=%~dp0IxpSettings.json"
+set "SOURCE_JSON=%~dp0ClientAppSettings.json"
 
 :: Target folder
 set "TARGET_FOLDER=%LOCALAPPDATA%\Roblox\ClientSettings"
