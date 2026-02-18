@@ -1,5 +1,5 @@
 @echo off
-title FFlag Applier
+title Vanilla FFlag Adder
 setlocal enabledelayedexpansion
 
 :: Path to your JSON file
