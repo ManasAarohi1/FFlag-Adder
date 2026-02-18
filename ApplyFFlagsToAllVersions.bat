@@ -1,19 +1,15 @@
 @echo off
 title FFlag Applier
-setlocal
+setlocal enabledelayedexpansion
 
 :: Path to your JSON file
 set "SOURCE_JSON=%~dp0ClientAppSettings.json"
-
-:: Target folder
-set "TARGET_FOLDER=%LOCALAPPDATA%\Roblox\ClientSettings"
 
 echo =================================================
 echo             FFlag Applier
 echo =================================================
 echo Press 1 to APPLY FFlags
 echo Press 2 to REMOVE all FFlags
-echo =================================================
 
 choice /C 12 /N /M "Choose: "
 
@@ -22,23 +18,55 @@ if errorlevel 1 goto apply_fflags
 
 
 :apply_fflags
-echo Applying IxpSettings.json to %TARGET_FOLDER% ...
-if not exist "%TARGET_FOLDER%" (
-    mkdir "%TARGET_FOLDER%" >nul 2>&1
+echo Applying FFlags to Vanilla Roblox...
+set "ROBLOX_FOUND=0"
+
+:: Loop through Roblox version folders to find the active vanilla client
+for /d %%D in ("%LOCALAPPDATA%\Roblox\Versions\*") do (
+    if exist "%%D\RobloxPlayerBeta.exe" (
+        set "ROBLOX_FOUND=1"
+        echo Target found: %%D
+        
+        :: Create ClientSettings folder if it doesn't exist
+        if not exist "%%D\ClientSettings" (
+            mkdir "%%D\ClientSettings" >nul 2>&1
+        )
+        
+        :: Copy the JSON to the correct vanilla location
+        copy /Y "%SOURCE_JSON%" "%%D\ClientSettings\ClientAppSettings.json" >nul
+        echo Done applying FFlags to this version!
+    )
 )
-copy /Y "%SOURCE_JSON%" "%TARGET_FOLDER%\IxpSettings.json" >nul
-echo Done applying FFlags!
+
+if "%ROBLOX_FOUND%"=="0" (
+    echo Error: Could not find a valid Vanilla Roblox installation.
+) else (
+    echo All operations finished!
+)
 pause
 goto :eof
 
 
 :remove_fflags
-echo Removing IxpSettings.json from %TARGET_FOLDER% ...
-if exist "%TARGET_FOLDER%\IxpSettings.json" (
-    del /f /q "%TARGET_FOLDER%\IxpSettings.json"
-    echo Removed IxpSettings.json
+echo Removing FFlags from Vanilla Roblox...
+set "ROBLOX_FOUND=0"
+
+for /d %%D in ("%LOCALAPPDATA%\Roblox\Versions\*") do (
+    if exist "%%D\RobloxPlayerBeta.exe" (
+        set "ROBLOX_FOUND=1"
+        if exist "%%D\ClientSettings\ClientAppSettings.json" (
+            del /f /q "%%D\ClientSettings\ClientAppSettings.json"
+            echo Removed ClientAppSettings.json from %%D
+        ) else (
+            echo No ClientAppSettings.json found in %%D to remove.
+        )
+    )
+)
+
+if "%ROBLOX_FOUND%"=="0" (
+    echo Error: Could not find a valid Vanilla Roblox installation.
 ) else (
-    echo No IxpSettings.json found to remove.
+    echo All operations finished!
 )
 pause
 goto :eof
